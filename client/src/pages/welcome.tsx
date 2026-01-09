@@ -106,7 +106,11 @@ export default function Welcome() {
           >
             <span className="font-semibold text-sm" style={{ color: '#dcd4c8' }}>ADDRESS</span>
           </div>
-          <div className="leading-snug text-sm" style={{ color: '#E8DFD1' }}>
+          <div 
+            className="leading-snug text-sm cursor-pointer transition-opacity hover:opacity-80" 
+            style={{ color: '#E8DFD1' }}
+            onClick={() => window.open("https://www.google.com/maps/place/Barrelborn+%7C+Dine+%26+Draft+%7C+Thane/@19.1935267,72.9666575,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7b9b24c556745:0x394d83a5b37880b2!8m2!3d19.1935267!4d72.9666575!16s%2Fg%2F11mf86ybm5?entry=ttu&g_ep=EgoyMDI2MDEwNi4wIKXMDSoASAFQAw%3D%3D", "_blank")}
+          >
             <p>Shop No: 3, Madanlal Dhingra Rd,</p>
             <p>beside Satranj Wafers, Bhakti Mandir,</p>
             <p>Panch Pakhdi, Thane West</p>
