@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;600;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Orange, Black, White theme colors for Mings Chinese Cuisine */
+  --mings-orange: hsl(17, 100%, 55%);
+  --mings-orange-light: hsl(17, 100%, 65%);
+  --mings-orange-dark: hsl(17, 100%, 45%);
+  --mings-black: hsl(0, 0%, 8%);
+  --mings-dark-gray: hsl(0, 0%, 15%);
+  --mings-white: hsl(0, 0%, 100%);
+  --mings-cream: hsl(45, 20%, 95%);
+  --mings-gray: hsl(0, 0%, 50%);
+  --mings-light-gray: hsl(0, 0%, 85%);
+  --mings-emerald: hsl(142, 76%, 36%);
+  --mings-red: hsl(0, 74%, 42%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel Decorative', serif;
+  }
+
+  .font-cormorant {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .mings-orange-gradient {
+    background: linear-gradient(135deg, var(--mings-orange) 0%, var(--mings-orange-light) 100%);
+  }
+
+  .mings-orange-dark-gradient {
+    background: linear-gradient(135deg, var(--mings-orange-dark) 0%, var(--mings-orange) 100%);
+  }
+
+  .mings-card {
+    background: var(--mings-white);
+    border: 2px solid var(--mings-light-gray);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .mings-card-orange {
+    background: var(--mings-orange);
+    border: 2px solid var(--mings-black);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .dish-card {
+    transition: all 0.3s ease;
+    background: var(--mings-white);
+    border: 1px solid var(--mings-light-gray);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .dish-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--mings-orange);
+  }
+
+  .floating-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--mings-orange);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px); 
+      opacity: 0.7;
+    }
+    50% { 
+      transform: translateY(-20px); 
+      opacity: 1;
+    }
+  }
+
+  .elegant-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .elegant-shadow-hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .mings-bg-gradient {
+    background: linear-gradient(135deg, var(--mings-orange) 0%, var(--mings-orange-light) 100%);
+  }
+
+  .mings-card-glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--mings-light-gray);
+  }
+
+  .dish-card {
+    background: white;
+    border: 1px solid var(--mings-light-gray);
+  }
+
+  .dish-card:hover {
+    border-color: var(--mings-orange);
+  }
+}
+
+/* Enhanced responsive design for mobile cards */
+@media (max-width: 768px) {
+  .mings-card {
+    margin: 0 1rem;
+    padding: 2rem 1.5rem !important;
+  }
+  
+  /* Mobile grid styling for restaurant details */
+  .grid.md\\:grid-cols-3 {
+    grid-template-columns: 1fr;
+    gap: 1.5rem !important;
+    padding: 0 1rem;
+  }
+  
+  .grid.md\\:grid-cols-3 > div {
+    margin: 0 !important;
+    border-radius: 1rem !important;
+    padding: 1.5rem !important;
+    border: 2px solid var(--mings-black) !important;
+    background: var(--mings-white) !important;
+  }
+  
+  /* Ensure proper border radius on mobile */
+  .rounded-2xl {
+    border-radius: 1rem !important;
+  }
+  
+  .rounded-3xl {
+    border-radius: 1.5rem !important;
+  }
+  
+  /* Typography adjustments for mobile */
+  .text-8xl {
+    font-size: 4.5rem !important;
+  }
+  
+  .text-5xl {
+    font-size: 2.5rem !important;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Ensure proper container padding on mobile */
+  .min-h-screen .p-4 {
+    padding: 1rem !important;
+  }
+  
+  .max-w-5xl {
+    max-width: 100% !important;
+    padding: 0 1rem;
+  }
+}
