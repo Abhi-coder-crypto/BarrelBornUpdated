@@ -148,6 +148,7 @@ const subcategoryImages: Record<string, string> = {
   "wine-cocktails": wineCocktailsImg,
   "signature-shots": signatureShotsImg,
   "classic-shots": signatureShotsImg,
+  "beer-cocktail": fallbackImg,
 };
 
 export default function CategorySelection() {

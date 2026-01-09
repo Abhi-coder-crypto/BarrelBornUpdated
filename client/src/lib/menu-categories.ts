@@ -169,6 +169,11 @@ export const mainCategories: MainCategory[] = [
       },
       { id: "sangria", displayLabel: "Sangria", dbCategory: "sangria" },
       {
+        id: "beer-cocktail",
+        displayLabel: "Beer Cocktail",
+        dbCategory: "beer-cocktail",
+      },
+      {
         id: "signature-shots",
         displayLabel: "Signature Shots",
         dbCategory: "signature-shots",
