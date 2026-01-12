@@ -90,6 +90,7 @@ import sizzlersImg from "@assets/image_1765863042831.png";
 import pintBeerImg from "@assets/pint_beer_1766834179092.png";
 import craftBeerOnTapImg from "@assets/Craftbeerontap_1766834179093.png";
 import draughtBeerImg from "@assets/Draught_beer-min_1766834686357.png";
+import beerCocktailImg from "@assets/beer_cocktail_1768238826587.jpg";
 
 const subcategoryImages: Record<string, string> = {
   "signature-mocktails": signatureMocktailsImg,
@@ -148,7 +149,7 @@ const subcategoryImages: Record<string, string> = {
   "wine-cocktails": wineCocktailsImg,
   "signature-shots": signatureShotsImg,
   "classic-shots": signatureShotsImg,
-  "beer-cocktail": fallbackImg,
+  "beer-cocktail": beerCocktailImg,
 };
 
 export default function CategorySelection() {
