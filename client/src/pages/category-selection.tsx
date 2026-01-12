@@ -91,6 +91,7 @@ import pintBeerImg from "@assets/pint_beer_1766834179092.png";
 import craftBeerOnTapImg from "@assets/Craftbeerontap_1766834179093.png";
 import draughtBeerImg from "@assets/Draught_beer-min_1766834686357.png";
 import beerCocktailImg from "@assets/beer_cocktail_1768238826587.jpg";
+import wineImg from "@assets/image_1768239070678.png";
 
 const subcategoryImages: Record<string, string> = {
   "signature-mocktails": signatureMocktailsImg,
@@ -105,7 +106,7 @@ const subcategoryImages: Record<string, string> = {
   tequila: tequilaImg,
   "cognac-brandy": cognacBrandyImg,
   liqueurs: liqueursImg,
-  wine: fallbackImg,
+  wine: wineImg,
   "sparkling-wine": fallbackImg,
   "white-wines": fallbackImg,
   "rose-wines": fallbackImg,
