@@ -13,6 +13,7 @@ export interface MainCategory {
   displayLabel: string;
   description: string;
   subcategories: SubCategory[];
+  hidden?: boolean;
 }
 
 // FOOD subcategories
@@ -185,6 +186,7 @@ export const mainCategories: MainCategory[] = [
     displayLabel: "BAR",
     description: "Premium spirits and wines",
     subcategories: barSubcategories,
+    hidden: true,
   },
   {
     id: "desserts",

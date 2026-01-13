@@ -164,7 +164,7 @@ export default function MenuLanding() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4 pb-4">
-          {mainCategories.filter(cat => cat.id !== "wine").map((category, index) => (
+          {mainCategories.filter(cat => cat.id !== "wine" && !cat.hidden).map((category, index) => (
             <motion.button
               key={category.id}
               initial={{ opacity: 0, y: 20 }}

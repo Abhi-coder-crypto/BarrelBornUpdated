@@ -52,7 +52,7 @@ export default function HamburgerMenu({
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-6">
-          {mainCategories.map((category, index) => (
+          {mainCategories.filter(cat => !cat.hidden).map((category, index) => (
             <motion.button
               key={category.id}
               whileHover={{ scale: 1.02 }}
