@@ -147,6 +147,7 @@ export const mainCategories: MainCategory[] = [
         dbCategory: "pint-beers",
       },
     ],
+    hidden: true,
   },
   {
     id: "cocktails",
