@@ -1,66 +1,66 @@
-# Replit.md
+# BarrelBorn - Dine & Draft
 
 ## Overview
 
-"Mings Chinese Cuisine" is a luxurious, royal-themed restaurant menu web application designed to provide a premium dining experience. It features an elegant, interactive UI for sophisticated menu browsing and ordering. The project aims to offer a modern, authentic design with advanced animations and user-friendly features like a one-click rating system, while supporting both Replit and Vercel deployment strategies. Key capabilities include an integrated customer review system, robust media playback, and consistent menu item sorting.
+BarrelBorn is a luxurious restaurant menu web application for "BarrelBorn - Dine & Draft" restaurant. It features an elegant, interactive UI for sophisticated menu browsing with a modern orange, black, and white brand theme.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-UI/UX Preference: Modern, authentic design with sophisticated animations and orange, black, white brand theming. Focus on easy-to-use features like one-click rating system.
+UI/UX Preference: Modern, authentic design with sophisticated animations and orange, black, white brand theming.
 
 ## System Architecture
 
-The application follows a traditional client-server architecture with clear separation between frontend and backend, unified by shared TypeScript schemas and a modern orange, black, and white brand theme.
-
 ### Frontend Architecture
 
--   **Framework**: React with TypeScript
--   **Build Tool**: Vite
--   **Styling**: Tailwind CSS with custom royal theme variables, Radix UI primitives with shadcn/ui components
--   **State Management**: TanStack Query for server state
--   **Routing**: Wouter for lightweight client-side routing
--   **Animations**: Framer Motion for smooth transitions
--   **UI/UX Decisions**: Elegant, interactive UI with deep midnight blue and golden accents (initial design), later updated to orange, black, and white brand theme. Includes a redesigned welcome page, restaurant logo integration, one-click 5-star rating, social media icons, and enhanced mobile responsiveness. Typography uses Open Sans for categories and menu item names.
+- **Framework**: React with TypeScript
+- **Build Tool**: Vite (configured for port 5000, allowedHosts: true for Replit proxy)
+- **Styling**: Tailwind CSS with custom theme, Radix UI primitives with shadcn/ui components
+- **State Management**: TanStack Query for server state
+- **Routing**: Wouter for lightweight client-side routing
+- **Animations**: Framer Motion for smooth transitions
 
 ### Backend Architecture
 
--   **Runtime**: Node.js with Express.js
--   **Language**: TypeScript with ES modules
--   **Database**: PostgreSQL with Drizzle ORM (initially MongoDB Atlas)
--   **Session Storage**: PostgreSQL-based sessions using connect-pg-simple
--   **API**: RESTful API with JSON responses
--   **Technical Implementations**: Monorepo structure, full type safety across the stack, component-based UI, advanced animation system. Category-based data storage for menu items with automatic collection creation for new categories.
--   **Feature Specifications**: Menu display with category filtering and search, shopping cart functionality, Google review system integration, and menu item sorting (Veg items first, then Chicken, then Prawns, then others).
+- **Runtime**: Node.js with Express.js
+- **Language**: TypeScript with ES modules
+- **Database**: MongoDB Atlas (external, connection string in storage.ts)
+- **API**: RESTful API with JSON responses
 
-### Deployment Strategy
+### Project Structure
 
--   **Development**: `npm run dev` with Vite (frontend) and tsx (backend).
--   **Production**: Supports both Replit and Vercel.
-    -   **Replit**: Single Node.js process serving static files and API.
-    -   **Vercel**: Frontend static files served via CDN, backend as serverless functions (api/ directory).
--   **Configuration**: Environment variables (e.g., MONGODB_URI), static file serving, API routes.
+```
+/
+├── client/          # React frontend
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       └── lib/
+├── server/          # Express backend
+│   ├── index.ts     # Main server entry point
+│   ├── routes.ts    # API routes
+│   ├── storage.ts   # MongoDB storage layer
+│   └── vite.ts      # Vite dev server integration
+├── shared/          # Shared types and schemas
+│   └── schema.ts    # Zod schemas and TypeScript types
+├── attached_assets/ # Media assets (images, audio)
+└── dist/            # Production build output
+```
 
-## External Dependencies
+### Running the Application
 
-### Frontend Dependencies
+- **Development**: `npm run dev` - Runs tsx server/index.ts which serves both API and Vite dev server on port 5000
+- **Production**: `npm run build` then `npm start` - Builds frontend to dist/public and runs production server
 
--   **UI Framework**: React
--   **State Management**: TanStack React Query
--   **Styling**: Tailwind CSS, Radix UI primitives, clsx, class-variance-authority
--   **Animations**: Framer Motion
--   **Forms**: React Hook Form with Zod validation
--   **Routing**: Wouter
+### Key Configuration
 
-### Backend Dependencies
+- Server binds to `0.0.0.0:5000`
+- Vite configured with `allowedHosts: true` for Replit proxy compatibility
+- MongoDB Atlas connection is configured in `server/storage.ts`
 
--   **Server**: Express.js
--   **Database**: Drizzle ORM with @neondatabase/serverless (previously MongoDB Atlas driver), Zod schemas for validation
--   **Session Management**: connect-pg-simple
+### Deployment
 
-### Development Tools
-
--   **Build**: Vite, esbuild
--   **Database**: Drizzle Kit for migrations
--   **Linting**: TypeScript compiler checks
--   **Replit Integration**: Cartographer and error overlay plugins
+Configured for autoscale deployment:
+- Build: `npm run build`
+- Run: `npm start`
