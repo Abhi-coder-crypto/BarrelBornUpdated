@@ -34,12 +34,35 @@ export default function Welcome() {
     window.open(reviewUrl, "_blank", "noopener,noreferrer");
   }, []);
 
-  const handleExploreMenu = (e: React.FormEvent) => {
+  const handleExploreMenu = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name && number) {
-      console.log("Customer Info:", { name, number });
-      setIsDialogOpen(false);
-      setLocation("/menu");
+      try {
+        const response = await fetch("/api/customers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email: "not-provided@example.com", // Temporary default as form doesn't have email
+            phone: number,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to store customer data");
+        }
+
+        console.log("Customer Info saved successfully");
+        setIsDialogOpen(false);
+        setLocation("/menu");
+      } catch (error) {
+        console.error("Error saving customer info:", error);
+        // Still proceed to menu even if saving fails to not block user
+        setIsDialogOpen(false);
+        setLocation("/menu");
+      }
     }
   };
 
