@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection, ObjectId } from "mongodb";
-import { type User, type InsertUser, type MenuItem, type InsertMenuItem, type CartItem, type InsertCartItem } from "@shared/schema";
+import { type User, type InsertUser, type MenuItem, type InsertMenuItem, type CartItem, type InsertCartItem, type Customer, type InsertCustomer } from "@shared/schema";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -17,6 +17,10 @@ export interface IStorage {
   removeFromCart(id: string): Promise<void>;
   clearCart(): Promise<void>;
   
+  // Customer operations
+  getCustomers(): Promise<Customer[]>;
+  createCustomer(customer: InsertCustomer): Promise<Customer>;
+
   clearDatabase(): Promise<void>;
   fixVegNonVegClassification(): Promise<{ updated: number; details: string[] }>;
 }
@@ -27,6 +31,7 @@ export class MongoStorage implements IStorage {
   private categoryCollections: Map<string, Collection<MenuItem>>;
   private cartItemsCollection: Collection<CartItem>;
   private usersCollection: Collection<User>;
+  private customersCollection: Collection<Customer>;
   private restaurantId: ObjectId;
 
   private readonly categories = [
@@ -53,6 +58,7 @@ export class MongoStorage implements IStorage {
 
     this.cartItemsCollection = this.db.collection("cartitems");
     this.usersCollection = this.db.collection("users");
+    this.customersCollection = this.db.collection("customers");
     this.restaurantId = new ObjectId("6874cff2a880250859286de6");
   }
 
@@ -176,6 +182,17 @@ export class MongoStorage implements IStorage {
 
   async getCartItems(): Promise<CartItem[]> {
     return await this.cartItemsCollection.find({}).toArray();
+  }
+
+  async getCustomers(): Promise<Customer[]> {
+    return await this.customersCollection.find({}).toArray();
+  }
+
+  async createCustomer(insertCustomer: InsertCustomer): Promise<Customer> {
+    const now = new Date();
+    const customer = { ...insertCustomer, createdAt: now, updatedAt: now };
+    const result = await this.customersCollection.insertOne(customer as any);
+    return { _id: result.insertedId, ...customer } as any;
   }
 
   async addToCart(item: InsertCartItem): Promise<CartItem> {
