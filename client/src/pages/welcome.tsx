@@ -6,11 +6,21 @@ import { MediaPreloader } from "../components/media-preloader";
 import { useState, useCallback } from "react";
 import logoImage from "@assets/Untitled_design_(20)_1765720426678.png";
 import bgPattern from "@assets/dark_bg_pattern.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
 
 export default function Welcome() {
   const [, setLocation] = useLocation();
   const { hasPlayedAudio, audioError, isReady } = useWelcomeAudio();
   const [mediaReady, setMediaReady] = useState(false);
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSocialClick = useCallback((url: string) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
@@ -23,6 +33,15 @@ export default function Welcome() {
     const reviewUrl = "https://g.page/r/CbKAeLOlg005EBM/review";
     window.open(reviewUrl, "_blank", "noopener,noreferrer");
   }, []);
+
+  const handleExploreMenu = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name && number) {
+      console.log("Customer Info:", { name, number });
+      setIsDialogOpen(false);
+      setLocation("/menu");
+    }
+  };
 
   return (
     <div 
@@ -73,15 +92,55 @@ export default function Welcome() {
           </button>
         </div>
 
-        {/* Explore Menu Button */}
-        <button
-          onClick={() => setLocation("/menu")}
-          className="mt-7 px-10 py-3 font-semibold border-2 rounded-full transition-colors flex items-center gap-2 text-base"
-          style={{ borderColor: '#B8986A', color: '#FFFFFF', backgroundColor: '#B8986A' }}
-        >
-          <Utensils className="w-5 h-5" style={{ color: '#FFFFFF' }} />
-          <span>EXPLORE OUR MENU</span>
-        </button>
+        {/* Explore Menu Button with Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <button
+              className="mt-7 px-10 py-3 font-semibold border-2 rounded-full transition-colors flex items-center gap-2 text-base"
+              style={{ borderColor: '#B8986A', color: '#FFFFFF', backgroundColor: '#B8986A' }}
+            >
+              <Utensils className="w-5 h-5" style={{ color: '#FFFFFF' }} />
+              <span>EXPLORE OUR MENU</span>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] bg-[#1a1a1a] border-[#B8986A] text-[#dcd4c8]">
+            <DialogHeader>
+              <DialogTitle className="text-[#B8986A] text-xl">Welcome to BarrelBorn</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleExploreMenu} className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label htmlFor="name" className="text-sm font-medium">Name</label>
+                <input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name"
+                  required
+                  className="flex h-10 w-full rounded-md border border-[#B8986A] bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8986A] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="number" className="text-sm font-medium">Mobile Number</label>
+                <input
+                  id="number"
+                  type="tel"
+                  value={number}
+                  onChange={(e) => setNumber(e.target.value)}
+                  placeholder="Enter mobile number"
+                  required
+                  className="flex h-10 w-full rounded-md border border-[#B8986A] bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8986A] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full mt-2 px-4 py-2 font-semibold rounded-md transition-colors"
+                style={{ backgroundColor: '#B8986A', color: '#FFFFFF' }}
+              >
+                PROCEED TO MENU
+              </button>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         {/* Rating Section */}
         <div className="text-center mt-5">
