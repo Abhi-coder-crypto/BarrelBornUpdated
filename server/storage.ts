@@ -186,7 +186,7 @@ export class MongoStorage implements IStorage {
   }
 
   async getCustomers(): Promise<Customer[]> {
-    return await this.customersCollection.find({}).toArray();
+    return await this.customersCollection.find({}).sort({ updatedAt: -1 }).toArray();
   }
 
   async getCustomerByPhone(phone: string): Promise<Customer | undefined> {
