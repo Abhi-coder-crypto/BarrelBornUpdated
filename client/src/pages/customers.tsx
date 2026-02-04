@@ -68,7 +68,6 @@ export default function AdminDashboard() {
                   <TableRow className="bg-muted/50">
                     <TableHead className="font-semibold">Customer Name</TableHead>
                     <TableHead className="font-semibold">Phone Number</TableHead>
-                    <TableHead className="font-semibold text-right">Last Visit Timestamp</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -80,11 +79,6 @@ export default function AdminDashboard() {
                           <Phone className="h-3 w-3 text-muted-foreground" />
                           {customer.phone}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground">
-                        {customer.updatedAt 
-                          ? format(new Date(customer.updatedAt), "MMM dd, yyyy HH:mm")
-                          : "Never"}
                       </TableCell>
                     </TableRow>
                   ))}
