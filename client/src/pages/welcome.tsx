@@ -45,7 +45,6 @@ export default function Welcome() {
           },
           body: JSON.stringify({
             name,
-            email: "not-provided@example.com", // Temporary default as form doesn't have email
             phone: number,
           }),
         });
