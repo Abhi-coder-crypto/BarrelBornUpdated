@@ -17,7 +17,7 @@ function Router() {
       <Route path="/menu" component={MenuLanding} />
       <Route path="/menu/:category" component={CategorySelection} />
       <Route path="/menu/:category/:subcategory" component={SubcategoryProducts} />
-      <Route path="/customers" component={Customers} />
+      <Route path="/admin" component={Customers} />
       <Route component={NotFound} />
     </Switch>
   );
