@@ -19,6 +19,7 @@ export interface IStorage {
   
   // Customer operations
   getCustomers(): Promise<Customer[]>;
+  getCustomerByPhone(phone: string): Promise<Customer | undefined>;
   createCustomer(customer: InsertCustomer): Promise<Customer>;
 
   clearDatabase(): Promise<void>;
@@ -186,6 +187,11 @@ export class MongoStorage implements IStorage {
 
   async getCustomers(): Promise<Customer[]> {
     return await this.customersCollection.find({}).toArray();
+  }
+
+  async getCustomerByPhone(phone: string): Promise<Customer | undefined> {
+    const customer = await this.customersCollection.findOne({ phone });
+    return customer || undefined;
   }
 
   async createCustomer(insertCustomer: InsertCustomer): Promise<Customer> {

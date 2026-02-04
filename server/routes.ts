@@ -95,6 +95,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/customers", async (req, res) => {
     try {
       const validatedData = insertCustomerSchema.parse(req.body);
+      
+      // Check if customer already exists by phone
+      const existingCustomer = await storage.getCustomerByPhone(validatedData.phone);
+      if (existingCustomer) {
+        return res.json(existingCustomer);
+      }
+
       const customer = await storage.createCustomer(validatedData);
       res.json(customer);
     } catch (error) {
