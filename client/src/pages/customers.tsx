@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { type Customer } from "@shared/schema";
 import { Users, LayoutDashboard, Phone, Calendar as CalendarIcon, Download, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
@@ -36,7 +39,7 @@ export default function AdminDashboard() {
   });
 
   // Client-side range filtering since backend only supports single date
-  const filteredCustomers = (data?.customers || []).filter(customer => {
+  const filteredCustomers = (data?.customers || []).filter((customer: Customer) => {
     if (!dateRange?.from) return true;
     const visitDate = new Date(customer.createdAt);
     const start = startOfDay(dateRange.from);
@@ -52,7 +55,7 @@ export default function AdminDashboard() {
     try {
       let exportData;
       if (dateRange?.from) {
-        exportData = filteredCustomers.map(c => ({
+        exportData = filteredCustomers.map((c: Customer) => ({
           Name: c.name,
           Phone: c.phone,
           "Created At": new Date(c.createdAt).toLocaleString()
@@ -220,7 +223,7 @@ export default function AdminDashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {displayCustomers.map((customer) => (
+                  {displayCustomers.map((customer: Customer) => (
                     <TableRow key={customer._id.toString()} className="hover:bg-muted/30 transition-colors">
                       <TableCell className="font-medium">{customer.name}</TableCell>
                       <TableCell>
