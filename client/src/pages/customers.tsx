@@ -235,7 +235,7 @@ export default function AdminDashboard() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <CalendarIcon className="h-3 w-3 text-muted-foreground" />
-                          {new Date(customer.createdAt).toLocaleDateString()}
+                          {format(new Date(customer.createdAt), "dd/MM/yyyy")}
                         </div>
                       </TableCell>
                     </TableRow>
