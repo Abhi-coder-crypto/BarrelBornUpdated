@@ -69,17 +69,26 @@ export default function AdminDashboard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <LayoutDashboard className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+              <p className="text-sm text-muted-foreground">Manage and monitor customer visit records</p>
+            </div>
           </div>
-          <Button onClick={handleExport} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Download Report
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+              <Users className="h-4 w-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">{total} Records Found</span>
+            </div>
+            <Button onClick={handleExport} variant="outline" className="gap-2">
+              <Download className="h-4 w-4" />
+              Download Report
+            </Button>
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Year</label>
+            <label className="text-sm font-medium text-muted-foreground">Yearly View</label>
             <Select value={year} onValueChange={(v) => { setYear(v); setPage(1); }}>
               <SelectTrigger>
                 <SelectValue placeholder="All Years" />
@@ -91,7 +100,7 @@ export default function AdminDashboard() {
             </Select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Month</label>
+            <label className="text-sm font-medium text-muted-foreground">Monthly View</label>
             <Select value={month} onValueChange={(v) => { setMonth(v); setPage(1); }}>
               <SelectTrigger>
                 <SelectValue placeholder="All Months" />
@@ -103,7 +112,7 @@ export default function AdminDashboard() {
             </Select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Day</label>
+            <label className="text-sm font-medium text-muted-foreground">Daily View</label>
             <Select value={day} onValueChange={(v) => { setDay(v); setPage(1); }}>
               <SelectTrigger>
                 <SelectValue placeholder="All Days" />
@@ -114,15 +123,6 @@ export default function AdminDashboard() {
               </SelectContent>
             </Select>
           </div>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Records</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{total}</div>
-            </CardContent>
-          </Card>
         </div>
 
         <Card className="border-none shadow-lg">
