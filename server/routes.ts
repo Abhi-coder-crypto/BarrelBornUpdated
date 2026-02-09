@@ -97,15 +97,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Customer routes
-  app.get("/api/customers", async (req, res) => {
-    try {
-      const customers = await storage.getCustomers();
-      res.json(customers);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch customers" });
-    }
-  });
-
   app.post("/api/customers", async (req, res) => {
     try {
       const validatedData = insertCustomerSchema.parse(req.body);
@@ -113,6 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if customer already exists by phone
       const existingCustomer = await storage.getCustomerByPhone(validatedData.phone);
       if (existingCustomer) {
+        // Return existing customer instead of creating a duplicate
         return res.json(existingCustomer);
       }
 

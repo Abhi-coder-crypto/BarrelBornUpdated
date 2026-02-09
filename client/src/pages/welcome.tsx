@@ -36,6 +36,16 @@ export default function Welcome() {
 
   const handleExploreMenu = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Simple validation for 10 digits
+    const phoneRegex = /^[0-9]{10,15}$/;
+    const cleanNumber = number.replace(/[\s-]/g, "");
+    
+    if (!phoneRegex.test(cleanNumber)) {
+      alert("Please enter a valid mobile number (10-15 digits)");
+      return;
+    }
+
     if (name && number) {
       try {
         const response = await fetch("/api/customers", {
@@ -45,12 +55,13 @@ export default function Welcome() {
           },
           body: JSON.stringify({
             name,
-            phone: number,
+            phone: cleanNumber,
           }),
         });
 
         if (!response.ok) {
-          throw new Error("Failed to store customer data");
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to store customer data");
         }
 
         console.log("Customer Info saved successfully");
@@ -58,9 +69,12 @@ export default function Welcome() {
         setLocation("/menu");
       } catch (error) {
         console.error("Error saving customer info:", error);
-        // Still proceed to menu even if saving fails to not block user
-        setIsDialogOpen(false);
-        setLocation("/menu");
+        alert(error instanceof Error ? error.message : "Error saving customer info");
+        // Still proceed to menu even if saving fails to not block user for non-critical errors
+        if (!(error instanceof Error && error.message.includes("validation"))) {
+          setIsDialogOpen(false);
+          setLocation("/menu");
+        }
       }
     }
   };
