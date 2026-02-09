@@ -62,6 +62,13 @@ export default function Welcome() {
 
         if (!response.ok) {
           const errorData = await response.json();
+          if (response.status === 409) {
+            // Already registered - log and proceed anyway as requested
+            console.log("Customer already registered, proceeding to menu");
+            setIsDialogOpen(false);
+            setLocation("/menu");
+            return;
+          }
           throw new Error(errorData.message || "Failed to store customer data");
         }
 
