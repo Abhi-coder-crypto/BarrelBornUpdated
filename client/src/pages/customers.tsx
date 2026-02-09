@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { type Customer } from "@shared/schema";
-import { Users, LayoutDashboard, Phone, Calendar as CalendarIcon, Download, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Users, LayoutDashboard, Phone, Calendar as CalendarIcon, Download, ChevronLeft, ChevronRight, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,12 +11,19 @@ import { format, isWithinInterval, startOfDay, endOfDay } from "date-fns";
 import * as XLSX from 'xlsx';
 import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
+import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [, setLocation] = useLocation();
   const limit = 10;
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin_auth");
+    setLocation("/login");
+  };
 
   const queryParams = new URLSearchParams({
     page: page.toString(),
@@ -110,6 +117,10 @@ export default function AdminDashboard() {
             <Button onClick={handleExport} variant="outline" className="gap-2">
               <Download className="h-4 w-4" />
               Download Report
+            </Button>
+            <Button onClick={handleLogout} variant="destructive" className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Logout
             </Button>
           </div>
         </div>
