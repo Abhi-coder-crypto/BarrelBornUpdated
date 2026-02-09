@@ -82,6 +82,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Auth routes
+  app.post("/api/login", async (req, res) => {
+    const { username, password } = req.body;
+    if (username === "CUSTOMERS@BARRELBORN.IN" && password === "BarrelBorn@132231") {
+      // Create user if not exists (to ensure collection exists and follows the schema)
+      const existingUser = await storage.getUserByUsername(username);
+      if (!existingUser) {
+        await storage.createUser({ username, password });
+      }
+      return res.json({ message: "Login successful" });
+    }
+    res.status(401).json({ message: "Invalid credentials" });
+  });
+
   // Customer routes
   app.get("/api/customers", async (req, res) => {
     try {

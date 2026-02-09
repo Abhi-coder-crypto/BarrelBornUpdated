@@ -8,7 +8,17 @@ import MenuLanding from "@/pages/menu-landing";
 import CategorySelection from "@/pages/category-selection";
 import SubcategoryProducts from "@/pages/subcategory-products";
 import Customers from "@/pages/customers";
+import LoginPage from "@/pages/login";
 import NotFound from "@/pages/not-found";
+
+function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+  const isAuthenticated = localStorage.getItem("admin_auth") === "true";
+  if (!isAuthenticated) {
+    window.location.href = "/login";
+    return null;
+  }
+  return <Component />;
+}
 
 function Router() {
   return (
@@ -17,7 +27,10 @@ function Router() {
       <Route path="/menu" component={MenuLanding} />
       <Route path="/menu/:category" component={CategorySelection} />
       <Route path="/menu/:category/:subcategory" component={SubcategoryProducts} />
-      <Route path="/admin" component={Customers} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/customers">
+        {() => <ProtectedRoute component={Customers} />}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
