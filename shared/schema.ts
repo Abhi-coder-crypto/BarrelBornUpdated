@@ -66,9 +66,7 @@ export const insertUserSchema = z.object({
 export const insertCustomerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string()
-    .min(10, "Phone number must be at least 10 digits")
-    .max(15, "Phone number is too long")
-    .regex(/^\+?[0-9\s-]+$/, "Invalid phone number format"),
+    .regex(/^\+91[0-9]{10}$/, "Phone number must be in +91XXXXXXXXXX format"),
 });
 
 export type InsertMenuItem = z.infer<typeof insertMenuItemSchema>;

@@ -37,17 +37,18 @@ export default function Welcome() {
   const handleExploreMenu = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation for 10 digits
-    const phoneRegex = /^[0-9]{10,15}$/;
-    const cleanNumber = number.replace(/[\s-]/g, "");
+    // Validate for 10 digits
+    const phoneRegex = /^[0-9]{10}$/;
+    const cleanNumber = number.replace(/[\s-+]/g, "");
     
     if (!phoneRegex.test(cleanNumber)) {
-      alert("Please enter a valid mobile number (10-15 digits)");
+      alert("Please enter a valid 10-digit mobile number");
       return;
     }
 
     if (name && number) {
       try {
+        const fullNumber = `+91${cleanNumber}`;
         const response = await fetch("/api/customers", {
           method: "POST",
           headers: {
@@ -55,7 +56,7 @@ export default function Welcome() {
           },
           body: JSON.stringify({
             name,
-            phone: cleanNumber,
+            phone: fullNumber,
           }),
         });
 
@@ -157,15 +158,28 @@ export default function Welcome() {
               </div>
               <div className="grid gap-2">
                 <label htmlFor="number" className="text-sm font-medium">Mobile Number</label>
-                <input
-                  id="number"
-                  type="tel"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  placeholder="Enter mobile number"
-                  required
-                  className="flex h-10 w-full rounded-md border border-[#B8986A] bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8986A] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                />
+                <div className="relative flex items-center">
+                  <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none text-sm text-[#dcd4c8]">
+                    <img 
+                      src="https://flagcdn.com/w20/in.png" 
+                      alt="India Flag" 
+                      className="w-5 h-auto rounded-sm"
+                    />
+                    <span className="font-medium">+91</span>
+                  </div>
+                  <input
+                    id="number"
+                    type="tel"
+                    value={number}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setNumber(val);
+                    }}
+                    placeholder="Enter 10 digit number"
+                    required
+                    className="flex h-10 w-full rounded-md border border-[#B8986A] bg-transparent pl-20 pr-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8986A] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
               </div>
               <button
                 type="submit"
