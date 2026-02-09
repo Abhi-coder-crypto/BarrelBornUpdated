@@ -18,7 +18,13 @@ export interface IStorage {
   clearCart(): Promise<void>;
   
   // Customer operations
-  getCustomers(): Promise<Customer[]>;
+  getCustomers(params: { 
+    page?: number; 
+    limit?: number; 
+    year?: number; 
+    month?: number; 
+    day?: number; 
+  }): Promise<{ customers: Customer[]; total: number }>;
   getCustomerByPhone(phone: string): Promise<Customer | undefined>;
   createCustomer(customer: InsertCustomer): Promise<Customer>;
 
@@ -185,8 +191,40 @@ export class MongoStorage implements IStorage {
     return await this.cartItemsCollection.find({}).toArray();
   }
 
-  async getCustomers(): Promise<Customer[]> {
-    return await this.customersCollection.find({}).sort({ updatedAt: -1 }).toArray();
+  async getCustomers(params: { 
+    page?: number; 
+    limit?: number; 
+    year?: number; 
+    month?: number; 
+    day?: number; 
+  }): Promise<{ customers: Customer[]; total: number }> {
+    const query: any = {};
+    
+    if (params.year || params.month || params.day) {
+      const start = new Date();
+      if (params.year) start.setFullYear(params.year);
+      if (params.month !== undefined) start.setMonth(params.month - 1);
+      if (params.day) start.setDate(params.day);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(start);
+      if (params.day) end.setDate(end.getDate() + 1);
+      else if (params.month) end.setMonth(end.getMonth() + 1);
+      else if (params.year) end.setFullYear(end.getFullYear() + 1);
+
+      query.createdAt = { $gte: start, $lt: end };
+    }
+
+    const total = await this.customersCollection.countDocuments(query);
+    
+    let cursor = this.customersCollection.find(query).sort({ createdAt: -1 });
+    
+    if (params.page && params.limit) {
+      cursor = cursor.skip((params.page - 1) * params.limit).limit(params.limit);
+    }
+    
+    const customers = await cursor.toArray();
+    return { customers, total };
   }
 
   async getCustomerByPhone(phone: string): Promise<Customer | undefined> {

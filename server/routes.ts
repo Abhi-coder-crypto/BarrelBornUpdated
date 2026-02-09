@@ -97,6 +97,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Customer routes
+  app.get("/api/customers", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const year = req.query.year ? parseInt(req.query.year as string) : undefined;
+      const month = req.query.month ? parseInt(req.query.month as string) : undefined;
+      const day = req.query.day ? parseInt(req.query.day as string) : undefined;
+
+      const result = await storage.getCustomers({ page, limit, year, month, day });
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch customers" });
+    }
+  });
+
+  app.get("/api/customers/export", async (req, res) => {
+    try {
+      const year = req.query.year ? parseInt(req.query.year as string) : undefined;
+      const month = req.query.month ? parseInt(req.query.month as string) : undefined;
+      const day = req.query.day ? parseInt(req.query.day as string) : undefined;
+
+      // Get all matching records for export (no pagination)
+      const { customers } = await storage.getCustomers({ year, month, day });
+      
+      const data = customers.map(c => ({
+        Name: c.name,
+        Phone: c.phone,
+        "Created At": new Date(c.createdAt).toLocaleString()
+      }));
+
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to export customers" });
+    }
+  });
+
   app.post("/api/customers", async (req, res) => {
     try {
       const validatedData = insertCustomerSchema.parse(req.body);
