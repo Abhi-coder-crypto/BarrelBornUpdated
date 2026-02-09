@@ -253,15 +253,10 @@ export class MongoStorage implements IStorage {
 
   async createCustomer(insertCustomer: InsertCustomer): Promise<Customer> {
     const existing = await this.customersCollection.findOne({ phone: insertCustomer.phone });
-    const now = new Date();
     if (existing) {
-      const updated = await this.customersCollection.findOneAndUpdate(
-        { _id: existing._id },
-        { $set: { name: insertCustomer.name, updatedAt: now } },
-        { returnDocument: 'after' }
-      );
-      return updated!;
+      throw new Error("This phone number is already registered.");
     }
+    const now = new Date();
     const customer = { ...insertCustomer, createdAt: now, updatedAt: now };
     const result = await this.customersCollection.insertOne(customer as any);
     return { _id: result.insertedId, ...customer } as any;

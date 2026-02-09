@@ -137,16 +137,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertCustomerSchema.parse(req.body);
       
-      // Check if customer already exists by phone
-      const existingCustomer = await storage.getCustomerByPhone(validatedData.phone);
-      if (existingCustomer) {
-        // Return existing customer instead of creating a duplicate
-        return res.json(existingCustomer);
-      }
-
       const customer = await storage.createCustomer(validatedData);
       res.json(customer);
     } catch (error) {
+      if (error instanceof Error && error.message === "This phone number is already registered.") {
+        return res.status(409).json({ message: error.message });
+      }
       res.status(400).json({ message: error instanceof Error ? error.message : "Invalid customer data" });
     }
   });

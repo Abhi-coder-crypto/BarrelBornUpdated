@@ -2,26 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { type Customer } from "@shared/schema";
-import { Users, LayoutDashboard, Phone, Calendar, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, LayoutDashboard, Phone, Calendar as CalendarIcon, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import * as XLSX from 'xlsx';
+import { cn } from "@/lib/utils";
 
 export default function AdminDashboard() {
   const [page, setPage] = useState(1);
-  const [year, setYear] = useState<string>("all");
-  const [month, setMonth] = useState<string>("all");
-  const [day, setDay] = useState<string>("all");
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const limit = 50;
 
   const queryParams = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    ...(year !== "all" && { year }),
-    ...(month !== "all" && { month }),
-    ...(day !== "all" && { day }),
+    ...(date && { 
+      year: date.getFullYear().toString(),
+      month: (date.getMonth() + 1).toString(),
+      day: date.getDate().toString()
+    }),
   });
 
   const { data, isLoading } = useQuery<{ customers: Customer[]; total: number }>({
@@ -35,9 +37,11 @@ export default function AdminDashboard() {
   const handleExport = async () => {
     try {
       const exportParams = new URLSearchParams({
-        ...(year !== "all" && { year }),
-        ...(month !== "all" && { month }),
-        ...(day !== "all" && { day }),
+        ...(date && { 
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString(),
+          day: date.getDate().toString()
+        }),
       });
       const response = await fetch(`/api/customers/export?${exportParams.toString()}`);
       const data = await response.json();
@@ -45,7 +49,8 @@ export default function AdminDashboard() {
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Customers");
-      XLSX.writeFile(wb, `customers_report_${year}_${month}_${day}.xlsx`);
+      const dateStr = date ? format(date, 'yyyy-MM-dd') : 'all';
+      XLSX.writeFile(wb, `customers_report_${dateStr}.xlsx`);
     } catch (error) {
       console.error("Export failed:", error);
     }
@@ -58,10 +63,6 @@ export default function AdminDashboard() {
       </div>
     );
   }
-
-  const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -86,42 +87,42 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Yearly View</label>
-            <Select value={year} onValueChange={(v) => { setYear(v); setPage(1); }}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Years" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Years</SelectItem>
-                {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Monthly View</label>
-            <Select value={month} onValueChange={(v) => { setMonth(v); setPage(1); }}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Months" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Months</SelectItem>
-                {months.map(m => <SelectItem key={m} value={m}>{format(new Date(2024, parseInt(m)-1), 'MMMM')}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Daily View</label>
-            <Select value={day} onValueChange={(v) => { setDay(v); setPage(1); }}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Days" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Days</SelectItem>
-                {days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
-              </SelectContent>
-            </Select>
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+          <div className="space-y-2 w-full md:w-auto">
+            <label className="text-sm font-medium text-muted-foreground block">Filter by Date</label>
+            <div className="flex gap-2 items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full md:w-[240px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(d) => { setDate(d); setPage(1); }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              {date && (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => { setDate(undefined); setPage(1); }}
+                  className="text-muted-foreground"
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
             <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
@@ -152,7 +153,7 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-3 w-3 text-muted-foreground" />
+                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
                           {new Date(customer.createdAt).toLocaleDateString()}
                         </div>
                       </TableCell>
