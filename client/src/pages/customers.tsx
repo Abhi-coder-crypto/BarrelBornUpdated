@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export default function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const limit = 50;
+  const limit = 10;
 
   const queryParams = new URLSearchParams({
     page: page.toString(),
@@ -26,9 +26,18 @@ export default function AdminDashboard() {
     }),
   });
 
-  const { data, isLoading } = useQuery<{ customers: Customer[]; total: number }>({
-    queryKey: ["/api/customers", queryParams.toString()],
+  const { data, isLoading, error } = useQuery<{ customers: Customer[]; total: number }>({
+    queryKey: [`/api/customers?${queryParams.toString()}`],
+    queryFn: async () => {
+      const response = await fetch(`/api/customers?${queryParams.toString()}`);
+      if (!response.ok) throw new Error("Failed to fetch");
+      return response.json();
+    }
   });
+
+  if (error) {
+    console.error("[AdminDashboard] Query error:", error);
+  }
 
   const customers = data?.customers || [];
   const total = data?.total || 0;

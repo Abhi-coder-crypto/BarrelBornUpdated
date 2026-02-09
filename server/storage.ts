@@ -201,28 +201,13 @@ export class MongoStorage implements IStorage {
     const query: any = {};
     
     if (params.year || params.month || params.day) {
-      const start = new Date();
-      if (params.year) {
-        start.setFullYear(params.year);
-      } else {
-        start.setFullYear(new Date().getFullYear());
-      }
+      const year = params.year || new Date().getFullYear();
+      const month = params.month !== undefined ? params.month - 1 : 0;
+      const day = params.day || 1;
       
-      if (params.month !== undefined) {
-        start.setMonth(params.month - 1);
-      } else {
-        start.setMonth(0);
-      }
+      const start = new Date(year, month, day, 0, 0, 0, 0);
+      const end = new Date(year, month, day, 0, 0, 0, 0);
       
-      if (params.day) {
-        start.setDate(params.day);
-      } else {
-        start.setDate(1);
-      }
-      
-      start.setHours(0, 0, 0, 0);
-
-      const end = new Date(start);
       if (params.day) {
         end.setDate(end.getDate() + 1);
       } else if (params.month !== undefined) {
@@ -231,6 +216,7 @@ export class MongoStorage implements IStorage {
         end.setFullYear(end.getFullYear() + 1);
       }
 
+      console.log(`[Storage] Filtering customers from ${start.toISOString()} to ${end.toISOString()}`);
       query.createdAt = { $gte: start, $lt: end };
     }
 
